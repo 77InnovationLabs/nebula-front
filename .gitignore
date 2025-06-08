@@ -1,0 +1,13 @@
+# Ignora a pasta node_modules
+node_modules/
+
+# Ignora arquivos de build do Next.js
+.next/
+out/
+
+# Ignora variáveis de ambiente
+.env.local
+.env
+
+# Outros
+dist/
