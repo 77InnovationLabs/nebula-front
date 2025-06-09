@@ -2,6 +2,7 @@ import React from 'react';
 import { useUserStore } from '../store/useUserStore';
 import { usePrivy } from '@privy-io/react-auth';
 import { Copy } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 const Navbar: React.FC = () => {
   const walletAddress = useUserStore((state) => state.walletAddress);
@@ -22,7 +23,10 @@ const Navbar: React.FC = () => {
   const handleCopyWallet = () => {
     if (walletAddress) {
       navigator.clipboard.writeText(walletAddress);
-      alert('Wallet address copied to clipboard!');
+      toast.success('Endereço da carteira copiado!', {
+        position: 'top-right',
+        autoClose: 2000,
+      });
     }
   };
 
@@ -33,16 +37,16 @@ const Navbar: React.FC = () => {
         <div className="flex flex-row items-center gap-2">
           <div className="flex flex-col">
             <span className="text-sm font-semibold">Wallet:&nbsp;</span>
-            <span className="text-sm">{formattedAddress}&nbsp;</span>
-          {walletAddress && (
-            <button
-              className="text-white hover:text-green-400"
-              onClick={handleCopyWallet}
-              title="Copiar endereço completo"
-            >
-              <Copy size={18} />
-            </button>
-          )}
+              <span className="text-sm">{formattedAddress}&nbsp;</span>
+              {walletAddress && (
+                <button
+                  className="text-white hover:text-green-400"
+                  onClick={handleCopyWallet}
+                  title="Copiar endereço completo"
+                >
+                  <Copy size={18} />
+                </button>
+              )}
           </div>
         </div>
         <div className="flex flex-col">

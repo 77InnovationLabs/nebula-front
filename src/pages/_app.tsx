@@ -2,6 +2,8 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { PrivyProvider } from '@privy-io/react-auth';
 import Navbar from '../components/Navbar';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID as string;
@@ -15,14 +17,15 @@ function MyApp({ Component, pageProps }: AppProps) {
           theme: 'dark', // ou 'light'
         },
         embeddedWallets: {
-            ethereum: { 
-                createOnLogin: 'all-users',
-            }, 
-        }, 
+          ethereum: {
+            createOnLogin: 'all-users',
+          },
+        },
       }}
     >
       <Navbar />
       <Component {...pageProps} />
+      <ToastContainer position="top-right" autoClose={2000} />
     </PrivyProvider>
   );
 }
