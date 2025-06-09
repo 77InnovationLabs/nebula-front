@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { PrivyProvider } from '@privy-io/react-auth';
+import Navbar from '../components/Navbar';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID as string;
@@ -9,12 +10,18 @@ function MyApp({ Component, pageProps }: AppProps) {
     <PrivyProvider
       appId={appId}
       config={{
-        loginMethods: ['wallet', 'email'], // você pode personalizar aqui
+        loginMethods: ['email'], // você pode personalizar aqui: ['wallet', 'email']
         appearance: {
           theme: 'dark', // ou 'light'
         },
+        embeddedWallets: {
+            ethereum: { 
+                createOnLogin: 'all-users',
+            }, 
+        }, 
       }}
     >
+      <Navbar />
       <Component {...pageProps} />
     </PrivyProvider>
   );
