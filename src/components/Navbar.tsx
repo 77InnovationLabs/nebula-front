@@ -36,8 +36,7 @@ const Navbar: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center md:gap-6">
         <div className="flex flex-row items-center gap-2">
           <div className="flex flex-col">
-            <span className="text-sm font-semibold">Wallet:&nbsp;</span>
-              <span className="text-sm">{formattedAddress}&nbsp;</span>
+            <span className="text-sm font-semibold">Wallet:&nbsp;{formattedAddress}&nbsp;
               {walletAddress && (
                 <button
                   className="text-white hover:text-green-400"
@@ -47,15 +46,14 @@ const Navbar: React.FC = () => {
                   <Copy size={18} />
                 </button>
               )}
+              </span>
           </div>
         </div>
         <div className="flex flex-col">
-          <span className="text-sm font-semibold">Aluno ID:&nbsp;</span>
-          <span className="text-sm">{studentId || 'Carregando...'}</span>
+          <span className="text-sm font-semibold">Aluno ID:&nbsp;{studentId || 'Carregando...'}</span>
         </div>
         <div className="flex flex-col">
-          <span className="text-sm font-semibold">Nome:&nbsp;</span>
-          <span className="text-sm">{studentName || 'Carregando...'}</span>
+          <span className="text-sm font-semibold">Nome:&nbsp;{studentName || 'Carregando...'}</span>
         </div>
       </div>
 
