@@ -4,6 +4,7 @@ import { useUserStore } from '../store/useUserStore';
 import api from '../services/api';
 import api_pessoa from '../services/api_pessoa';
 import NameModal from './NameModal';
+import { useRouter } from 'next/router';
 
 const LoginButton: React.FC = () => {
   const { ready, authenticated, login, logout, user } = usePrivy();
@@ -14,6 +15,8 @@ const LoginButton: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [pendingWallet, setPendingWallet] = useState('');
   const [pendingEmail, setPendingEmail] = useState('');
+  const router = useRouter();
+
 
   useEffect(() => {
     if (authenticated && user?.wallet?.address) {
@@ -25,6 +28,9 @@ const LoginButton: React.FC = () => {
           const { id, nome } = response.data;
           setStudentId(id);
           setStudentName(nome);
+
+          // ✅ Redireciona para /cursos após obter aluno
+          router.push('/cursos');
         } catch {
           // Se não encontrar, mostrar modal
           setPendingWallet(user.wallet.address);
@@ -62,6 +68,9 @@ const LoginButton: React.FC = () => {
       const { id, nome } = response.data;
       setStudentId(id);
       setStudentName(nome);
+
+      // ✅ Redireciona para /cursos após obter aluno
+      router.push('/cursos');
     } catch (err) {
       console.error('Erro ao criar aluno', err);
     } finally {
