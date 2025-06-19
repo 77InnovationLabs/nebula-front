@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useUserStore } from '../store/useUserStore';
 import api from '../services/api';
 import Link from 'next/link';
-
+import { useRouter } from 'next/router';
 
 interface AlunoCurso {
   id: string;
@@ -24,6 +24,7 @@ export default function CursosPage() {
   const studentId = useUserStore((state) => state.studentId);
   const [cursos, setCursos] = useState<AlunoCurso[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -95,11 +96,13 @@ export default function CursosPage() {
             <p className="text-sm mb-4">
               XP: {matricula.xp_ganho} ganho / {matricula.xp_disponivel} disponível
             </p>
-            <Link href={`/cursos/${matricula.curso_id}`}>
-              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
-                Acessar Curso
-              </button>
-            </Link>
+
+            <button
+              onClick={() => router.push(`/execucao-curso/${matricula.id}`)}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+            >
+              Acessar Curso
+            </button>
           </div>
         ))}
       </div>
