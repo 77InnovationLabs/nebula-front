@@ -1,7 +1,7 @@
 export default function CTA() {
     return (
-        <div className="min-h-screen bg-white">
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900 text-white">
+        <div className="bg-white">
+            <section className="py-25 px-4 sm:px-6 lg:px-8 bg-gray-900 text-white">
                 <div className="max-w-4xl mx-auto text-center">
                     <h2 className="text-4xl md:text-5xl font-bold mb-6">
                         Unlock Your Educational Potential
