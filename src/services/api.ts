@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.API_URL || "https://curso-service-app-9213072c1209.herokuapp.com",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8083",
 });
 
 export default api;

@@ -1,4 +1,3 @@
-// src/components/NameModal.tsx
 import React, { useState } from 'react';
 
 interface NameModalProps {
@@ -8,31 +7,66 @@ interface NameModalProps {
 const NameModal: React.FC<NameModalProps> = ({ onSubmit }) => {
   const [name, setName] = useState('');
 
-  const handleConfirm = () => {
-    if (name.trim()) {
-      onSubmit(name.trim());
-    }
-  };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-      <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl shadow-2xl p-6 w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">Nome do Aluno</h2>
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 9999,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: '#fff',
+          padding: '2rem',
+          borderRadius: '0.5rem',
+          width: '100%',
+          maxWidth: '400px',
+          boxShadow: '0 0 20px rgba(0,0,0,0.3)',
+          position: 'relative',
+        }}
+      >
+        <h2 style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.2rem', marginBottom: '1rem' }}>
+          Enter Your Name
+        </h2>
+
+        <p style={{ textAlign: 'center', fontSize: '0.9rem', marginBottom: '1rem', color: '#444' }}>
+          Please enter your full name so we can register your participation.
+        </p>
+
         <input
           type="text"
-          placeholder="Digite seu nome completo"
+          placeholder="Type your full name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          style={{
+            width: '100%',
+            padding: '0.5rem',
+            marginBottom: '1rem',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+          }}
         />
-        <div className="flex justify-end mt-4">
-          <button
-            onClick={handleConfirm}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md"
-          >
-            Confirmar
-          </button>
-        </div>
+
+        <button
+          onClick={() => onSubmit(name)}
+          style={{
+            width: '100%',
+            backgroundColor: '#2563eb',
+            color: '#fff',
+            padding: '0.5rem',
+            border: 'none',
+            borderRadius: '4px',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+          }}
+        >
+          Confirm
+        </button>
       </div>
     </div>
   );
