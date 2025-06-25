@@ -7,6 +7,7 @@ out/
 
 # Ignora variáveis de ambiente
 .env
+.env.prod
 
 # Outros
 dist/
