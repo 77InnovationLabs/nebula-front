@@ -48,7 +48,7 @@ export default function CursosPage() {
   if (loading) {
     return (
       <div className="p-8 text-center text-gray-700 dark:text-gray-200">
-        Carregando cursos...
+        Loading courses...
       </div>
     );
   }
@@ -56,7 +56,7 @@ export default function CursosPage() {
   if (cursos.length === 0) {
     return (
       <div className="p-8 text-center text-gray-700 dark:text-gray-200">
-        <h1 className="text-2xl font-bold mb-4">Meus Cursos</h1>
+        <h1 className="text-2xl font-bold mb-4">My Courses</h1>
         <p>Você ainda não está matriculado em nenhum curso.</p>
         <Link href="/cursos/disponiveis">
             <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
