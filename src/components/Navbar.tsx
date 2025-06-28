@@ -4,6 +4,8 @@ import { usePrivy } from '@privy-io/react-auth';
 import { Copy } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 
 const Navbar: React.FC = () => {
   const walletAddress = useUserStore((state) => state.walletAddress);
@@ -66,19 +68,23 @@ const Navbar: React.FC = () => {
 
         {studentName && (
           <div className="flex flex-col">
-            <span className="text-sm font-semibold">Name: {studentName}</span>
+            <span className="text-sm font-semibold">Name: {studentName}&nbsp;
+              <button
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </span>
           </div>
         )}
       </div>
 
+      <div className="ml-auto">NebulaQuest</div>
+
       {walletAddress && (
         <div className="ml-auto">
-          <button
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
+          <ConnectButton/>
         </div>
       )}
     </nav>

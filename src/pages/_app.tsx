@@ -4,6 +4,7 @@ import { PrivyProvider } from '@privy-io/react-auth';
 import Navbar from '../components/Navbar';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Providers } from "./provider";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID as string;
@@ -23,9 +24,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
       }}
     >
-      <Navbar />
-      <Component {...pageProps} />
-      <ToastContainer position="top-right" autoClose={2000} />
+      <Providers>
+        <Navbar />
+        <Component {...pageProps} />
+        <ToastContainer position="top-right" autoClose={2000} />
+      </Providers>
     </PrivyProvider>
   );
 }
