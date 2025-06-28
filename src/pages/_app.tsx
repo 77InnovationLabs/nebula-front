@@ -4,7 +4,7 @@ import { PrivyProvider } from '@privy-io/react-auth';
 import Navbar from '../components/Navbar';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Providers } from "./provider";
+import { Providers } from "../provider";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID as string;
