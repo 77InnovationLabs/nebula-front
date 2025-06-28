@@ -7,7 +7,7 @@ import NameModal from './NameModal';
 import { useRouter } from 'next/router';
 
 const LoginButton: React.FC = () => {
-  const { ready, authenticated, login, logout, user } = usePrivy();
+  const { ready, authenticated, login, user } = usePrivy();
   const setWalletAddress = useUserStore((state) => state.setWalletAddress);
   const setStudentId = useUserStore((state) => state.setStudentId);
   const setStudentName = useUserStore((state) => state.setStudentName);
