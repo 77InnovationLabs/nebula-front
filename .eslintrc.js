@@ -8,6 +8,7 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint'],
   rules: {
-    // Adicione regras personalizadas aqui
-  },
+    "react/react-in-jsx-scope": "off",   // you no longer need React in scope
+    "react/no-unknown-property": "off"   // optionally, but usually check your props carefully
+  }
 };

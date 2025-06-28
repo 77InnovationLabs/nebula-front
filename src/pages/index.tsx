@@ -5,7 +5,7 @@ import LoginButton from '../components/LoginButton';
 export default function Home() {
   return (
     <div style={styles.page}>
-      <style jsx>{`
+      <style>{`
         h1 {
           font-size: 2.8rem;
           font-weight: bold;
