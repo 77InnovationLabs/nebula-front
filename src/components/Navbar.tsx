@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
-
 const Navbar: React.FC = () => {
   const walletAddress = useUserStore((state) => state.walletAddress);
   const studentId = useUserStore((state) => state.studentId);
@@ -15,12 +14,11 @@ const Navbar: React.FC = () => {
   const { logout } = usePrivy();
   const router = useRouter();
 
-  // 🔐 Protege todas as rotas exceto a home
   useEffect(() => {
     if (!studentId && router.pathname !== '/') {
       router.push('/');
     }
-  }, [studentId, router.pathname]);
+  }, [studentId, router]); // ✅ router as dependency
 
   const formattedAddress = walletAddress
     ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
@@ -43,48 +41,80 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-gray-800 text-white p-4 flex items-center">
-      <div className="flex flex-col md:flex-row md:items-center md:gap-6">
+    <nav
+      style={{
+        backgroundColor: "#1f2937",
+        color: "#fff",
+        padding: "1rem",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexWrap: "wrap"
+      }}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         {walletAddress && (
-          <div className="flex flex-row items-center gap-2">
-            <span className="text-sm font-semibold">
-              Wallet: {formattedAddress}&nbsp;
-              <button
-                className="text-white hover:text-green-400"
-                onClick={handleCopyWallet}
-                title="Copy full address"
-              >
-                <Copy size={18} />
-              </button>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <span style={{ fontSize: "14px", fontWeight: "600" }}>
+              Wallet: {formattedAddress}
             </span>
+            <button
+              onClick={handleCopyWallet}
+              title="Copy full address"
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "#fff",
+                cursor: "pointer"
+              }}
+            >
+              <Copy size={18} />
+            </button>
           </div>
         )}
 
         {studentId && (
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold">Student ID: {studentId}</span>
-          </div>
+          <span style={{ fontSize: "14px", fontWeight: "600" }}>
+            Student ID: {studentId}
+          </span>
         )}
 
         {studentName && (
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold">Name: {studentName}&nbsp;
-              <button
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <span style={{ fontSize: "14px", fontWeight: "600" }}>
+              Name: {studentName}
             </span>
+            <button
+              onClick={handleLogout}
+              style={{
+                padding: "0.25rem 0.75rem",
+                backgroundColor: "#dc2626",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer"
+              }}
+            >
+              Logout
+            </button>
           </div>
         )}
       </div>
 
-      <div className="ml-auto">NebulaQuest</div>
+      <div
+        style={{
+          marginLeft: "auto",
+          marginRight: "1rem",
+          fontSize: "18px",
+          fontWeight: "bold"
+        }}
+      >
+        NebulaQuest
+      </div>
 
       {walletAddress && (
-        <div className="ml-auto">
-          <ConnectButton/>
+        <div>
+          <ConnectButton />
         </div>
       )}
     </nav>

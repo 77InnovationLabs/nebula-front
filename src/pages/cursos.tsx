@@ -30,11 +30,10 @@ export default function CursosPage() {
     const fetchCursos = async () => {
       try {
         const response = await api.get(`/alunocursos/curso/${studentId}`);
-        // Se API retornar null, garanta um array vazio
         setCursos(response.data ?? []);
       } catch (error) {
-        console.error('Erro ao buscar cursos do aluno:', error);
-        setCursos([]); // fallback de segurança
+        console.error('Error fetching courses:', error);
+        setCursos([]);
       } finally {
         setLoading(false);
       }
@@ -47,7 +46,7 @@ export default function CursosPage() {
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-gray-700 dark:text-gray-200">
+      <div style={{ padding: "2rem", textAlign: "center", color: "#555" }}>
         Loading courses...
       </div>
     );
@@ -55,53 +54,84 @@ export default function CursosPage() {
 
   if (cursos.length === 0) {
     return (
-      <div className="p-8 text-center text-gray-700 dark:text-gray-200">
-        <h1 className="text-2xl font-bold mb-4">My Courses</h1>
-        <p>Você ainda não está matriculado em nenhum curso.</p>
+      <div style={{ padding: "2rem", textAlign: "center", color: "#555" }}>
+        <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "1rem" }}>My Courses</h1>
+        <p>You are not enrolled in any course yet.</p>
         <Link href="/cursos/disponiveis">
-            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
-            Ver cursos disponíveis
-            </button>
+          <button
+            style={{
+              marginTop: "1rem",
+              padding: "0.5rem 1rem",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer"
+            }}
+          >
+            View Available Courses
+          </button>
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">
-        Meus Cursos
+    <div style={{ padding: "2rem" }}>
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "1rem", color: "#222" }}>
+        My Courses
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+        gap: "1rem"
+      }}>
         {cursos.map((matricula) => (
           <div
             key={matricula.id}
-            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition"
+            style={{
+              backgroundColor: "#fff",
+              border: "1px solid #ddd",
+              borderRadius: "8px",
+              padding: "1rem",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+              transition: "box-shadow 0.3s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.15)")}
+            onMouseLeave={e => (e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)")}
           >
-            <h2 className="text-xl font-semibold mb-2">
+            <h2 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "0.5rem" }}>
               {matricula.curso_nome}
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-2">
+            <p style={{ color: "#666", marginBottom: "0.5rem" }}>
               {matricula.curso_descricao}
             </p>
-            <p className="text-sm mb-1">
-              Progresso: {matricula.percentual_concluido}%
+            <p style={{ fontSize: "14px", marginBottom: "0.25rem" }}>
+              Progress: {matricula.percentual_concluido}%
             </p>
-            <p className="text-sm mb-1">
-              Status Curso: {matricula.status_curso}
+            <p style={{ fontSize: "14px", marginBottom: "0.25rem" }}>
+              Course Status: {matricula.status_curso}
             </p>
-            <p className="text-sm mb-1">
-              Status Pagamento: {matricula.status_pagamento}
+            <p style={{ fontSize: "14px", marginBottom: "0.25rem" }}>
+              Payment Status: {matricula.status_pagamento}
             </p>
-            <p className="text-sm mb-4">
-              XP: {matricula.xp_ganho} ganho / {matricula.xp_disponivel} disponível
+            <p style={{ fontSize: "14px", marginBottom: "0.5rem" }}>
+              XP: {matricula.xp_ganho} earned / {matricula.xp_disponivel} available
             </p>
 
             <button
               onClick={() => router.push(`/execucao-curso/${matricula.id}`)}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+              style={{
+                marginTop: "0.5rem",
+                padding: "0.5rem 1rem",
+                backgroundColor: "#007bff",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer"
+              }}
             >
-              Acessar Curso
+              Access Course
             </button>
           </div>
         ))}

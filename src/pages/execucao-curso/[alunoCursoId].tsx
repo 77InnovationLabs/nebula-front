@@ -1,8 +1,13 @@
+// src/pages/execucao-curso/[alunoCursoId].tsx
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import api from '../../services/api';
+import Validate from '../../components/Validate';
+import { useAbiLoader } from '../hooks/useAbiLoader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+console.log("DEBUG useAbiLoader", useAbiLoader);
 
 interface AlunoCursoItemModulo {
   id: string;
@@ -10,6 +15,10 @@ interface AlunoCursoItemModulo {
   item_modulo_id: string;
   item_modulo_nome: string;
   tipo_item_modulo: string;
+  validator_rede: string;
+  validator_endereco: string;
+  aula_texto: string;
+  video_url: string;
   status: string;
   progresso: number;
   tempo_assistido: number;
@@ -21,184 +30,197 @@ interface AlunoCursoItemModulo {
   updated_at: string;
 }
 
-export default function ExecucaoCursoPage() {
+export default function CourseExecutionPage() {
   const router = useRouter();
   const { alunoCursoId } = router.query;
 
-  const [itens, setItens] = useState<AlunoCursoItemModulo[]>([]);
-  const [itemSelecionado, setItemSelecionado] = useState<AlunoCursoItemModulo | null>(null);
+  const [items, setItems] = useState<AlunoCursoItemModulo[]>([]);
+  const [selectedItem, setSelectedItem] = useState<AlunoCursoItemModulo | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [contractAddress, setContractAddress] = useState('');
-  const [validating, setValidating] = useState(false);
-
   useEffect(() => {
-    const fetchItens = async () => {
+    const fetchItems = async () => {
       try {
         if (alunoCursoId) {
           const res = await api.get(`/alunocursos/${alunoCursoId}/itemmodulos`);
-          setItens(res.data);
+          setItems(res.data ?? []);
           if (res.data.length > 0) {
-            setItemSelecionado(res.data[0]);
+            setSelectedItem(res.data[0]);
           }
         }
       } catch (err) {
         console.error(err);
-        toast.error('Erro ao carregar itens do curso.');
+        toast.error('Error loading course items.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchItens();
+    fetchItems();
   }, [alunoCursoId]);
 
-  const concluirAula = async () => {
-    if (!itemSelecionado) return;
+  const completeLesson = async () => {
+    if (!selectedItem) return;
 
     const payload = {
-      status: 'concluído',
+      status: 'completed',
       progresso: 100,
       tempo_assistido: 600,
     };
 
     try {
-      await api.patch(`/alunocursoitemmodulos/${itemSelecionado.id}`, payload);
-      toast.success('Aula concluída com sucesso!');
-      avancarProximo();
+      await api.patch(`/alunocursoitemmodulos/${selectedItem.id}`, payload);
+      toast.success('Lesson marked as completed!');
+      goToNext();
     } catch (err) {
       console.error(err);
-      toast.error('Erro ao concluir a aula.');
+      toast.error('Error marking lesson as completed.');
     }
   };
 
-  const validarContrato = async () => {
-    if (!itemSelecionado) return;
-    setValidating(true);
-
-    const payload = {
-      status: 'concluído',
-      progresso: 100,
-      endereco_contrato_validar: contractAddress,
-      blockchain_rede_validacao: 'ethereum',
-      blockchain_tx_envio: 'tx_hash_exemplo',
-      status_validacao_contrato: 'validação contrato concluída',
-    };
-
-    try {
-      await api.patch(`/alunocursoitemmodulos/${itemSelecionado.id}`, payload);
-      toast.success('Contrato validado com sucesso!');
-      avancarProximo();
-    } catch (err) {
-      console.error(err);
-      toast.error('Erro ao validar o contrato.');
-    } finally {
-      setValidating(false);
-    }
-  };
-
-  const avancarProximo = () => {
-    const idx = itens.findIndex(i => i.id === itemSelecionado?.id);
-    if (idx >= 0 && idx < itens.length - 1) {
-      setItemSelecionado(itens[idx + 1]);
+  const goToNext = () => {
+    const idx = items.findIndex(i => i.id === selectedItem?.id);
+    if (idx >= 0 && idx < items.length - 1) {
+      setSelectedItem(items[idx + 1]);
     } else {
-      toast.success('Você concluiu todos os itens deste curso! 🎉');
+      toast.success('You have completed all items in this course! 🎉');
     }
   };
+
+  const { abi, loading: abiLoading, error: abiError } = useAbiLoader(
+    selectedItem?.endereco_contrato_validar || "",
+    (selectedItem?.blockchain_rede_validacao as 'sepolia' | 'avalancheFuji') || 'sepolia'
+  );
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen text-lg text-gray-600">
-        Carregando execução do curso...
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        fontSize: "18px",
+        color: "#555"
+      }}>
+        Loading course execution...
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Painel principal - Detalhes */}
-      <div className="w-2/3 p-8 overflow-y-auto">
-        {itemSelecionado ? (
-          <div className="bg-white shadow rounded p-6 transition-all">
-            <h2 className="text-2xl font-bold mb-4">
-              {itemSelecionado.item_modulo_nome}
+    <div style={{ display: "flex", height: "100vh", backgroundColor: "#f9f9f9" }}>
+      {/* Main panel */}
+      <div style={{ flex: 2, padding: "2rem", overflowY: "auto" }}>
+        {selectedItem ? (
+          <div style={{
+            backgroundColor: "#fff",
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            padding: "2rem",
+          }}>
+            <h2 style={{ fontSize: "20px", marginBottom: "1rem" }}>
+              {selectedItem.item_modulo_nome}
             </h2>
 
-            <p className="mb-2">
-              <span className="font-medium">Status:</span> {itemSelecionado.status}
-            </p>
-            <p className="mb-2">
-              <span className="font-medium">Progresso:</span> {itemSelecionado.progresso}%
-            </p>
+            <p><strong>Status:</strong> {selectedItem.status}</p>
+            <p><strong>Progress:</strong> {selectedItem.progresso}%</p>
 
-            {itemSelecionado.tipo_item_modulo === 'aula' && (
+            {selectedItem.tipo_item_modulo === 'aula' && (
               <>
-                <p className="mb-4">
-                  <span className="font-medium">Tempo assistido:</span> {itemSelecionado.tempo_assistido} segundos
-                </p>
-
-                {itemSelecionado.status !== 'concluído' && (
+                <p><strong>Watched Time:</strong> {selectedItem.tempo_assistido} seconds</p>
+                <p><strong>Content:</strong> {selectedItem.aula_texto}</p>
+                {selectedItem.status !== 'completed' && (
                   <button
-                    onClick={concluirAula}
-                    className="px-5 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                    onClick={completeLesson}
+                    style={{
+                      marginTop: "1rem",
+                      padding: "0.5rem 1rem",
+                      backgroundColor: "#28a745",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer"
+                    }}
                   >
-                    Concluir Aula
+                    Complete Lesson
                   </button>
                 )}
               </>
             )}
 
-            {itemSelecionado.tipo_item_modulo === 'contract_validation' && (
+            {selectedItem.tipo_item_modulo === 'video' && (
               <>
-                <p className="mb-4">
-                  <span className="font-medium">Status validação:</span> {itemSelecionado.status_validacao_contrato}
-                </p>
+                <p><strong>Video Link:</strong> {selectedItem.video_url}</p>
+                {selectedItem.status !== 'completed' && (
+                  <button
+                    onClick={completeLesson}
+                    style={{
+                      marginTop: "1rem",
+                      padding: "0.5rem 1rem",
+                      backgroundColor: "#28a745",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer"
+                    }}
+                  >
+                    Complete Video
+                  </button>
+                )}
+              </>
+            )}
 
-                <label className="block mb-1 font-medium">Endereço do Contrato</label>
-                <input
-                  type="text"
-                  value={contractAddress}
-                  onChange={(e) => setContractAddress(e.target.value)}
-                  placeholder="0x..."
-                  className="w-full mb-4 p-2 border rounded focus:outline-none focus:ring focus:border-blue-400"
-                />
+            {selectedItem.tipo_item_modulo === 'contract_validation' && (
+              <>
+                <p><strong>Contract Validation Status:</strong> {selectedItem.status_validacao_contrato}</p>
+                {abiLoading && <p>Loading ABI...</p>}
+                {abiError && <p style={{ color: "red" }}>{abiError}</p>}
 
-                <button
-                  onClick={validarContrato}
-                  disabled={validating}
-                  className="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                >
-                  {validating ? 'Validando...' : 'Validar Contrato'}
-                </button>
+                {abi && (
+                  <Validate
+                    contractAddress={selectedItem.validator_endereco}
+                    abi={abi}
+                    validatorAddress={selectedItem.endereco_contrato_validar}
+                    onSuccess={() => goToNext()}
+                  />
+                )}
               </>
             )}
           </div>
         ) : (
-          <p>Nenhum item selecionado.</p>
+          <p>No item selected.</p>
         )}
       </div>
 
-      {/* Painel lateral - Lista */}
-      <div className="w-1/3 p-6 bg-white border-l overflow-y-auto">
-        <h3 className="text-xl font-bold mb-4">Itens do Curso</h3>
-        <ul className="space-y-2 list-none p-0">
-          {itens.map((item) => (
+      {/* Side panel */}
+      <div style={{
+        flex: 1,
+        padding: "1rem",
+        backgroundColor: "#fff",
+        borderLeft: "1px solid #ddd",
+        overflowY: "auto"
+      }}>
+        <h3 style={{ fontSize: "18px", marginBottom: "1rem" }}>Course Items</h3>
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {items.map(item => (
             <li
               key={item.id}
-              onClick={() => setItemSelecionado(item)}
-              className={`p-4 rounded cursor-pointer transition ${
-                itemSelecionado?.id === item.id
-                  ? 'bg-blue-100 border border-blue-500'
-                  : 'hover:bg-gray-100'
-              }`}
+              onClick={() => setSelectedItem(item)}
+              style={{
+                padding: "0.5rem 1rem",
+                borderRadius: "4px",
+                marginBottom: "0.5rem",
+                backgroundColor: selectedItem?.id === item.id ? "#e7f1ff" : "#f9f9f9",
+                border: selectedItem?.id === item.id ? "1px solid #007bff" : "1px solid #ddd",
+                cursor: "pointer"
+              }}
             >
-              <p className="font-semibold">{item.item_modulo_nome || '(Sem nome)'}</p>
+              <strong>{item.item_modulo_nome || '(Unnamed)'}</strong>
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Toast Container */}
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );

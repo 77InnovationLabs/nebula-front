@@ -41,7 +41,14 @@ const LoginButton: React.FC = () => {
       setStudentId(null);
       setStudentName(null);
     }
-  }, [authenticated, user]);
+  }, [
+      authenticated,
+      user,
+      router,
+      setWalletAddress,
+      setStudentId,
+      setStudentName
+    ]);
 
   const handleCreateStudent = async (name: string) => {
     try {
