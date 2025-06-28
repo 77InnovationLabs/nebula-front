@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import api from '../../services/api';
 import Validate from '../../components/Validate';
-import { useAbiLoader } from '../hooks/useAbiLoader';
+import { useAbiLoader } from '../../hooks/useAbiLoader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
