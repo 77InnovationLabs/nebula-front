@@ -44,6 +44,18 @@ export default function CursosPage() {
     }
   }, [studentId]);
 
+  const handleRemove = async (id: string) => {
+    if (confirm('Are you sure you want to remove this enrollment?')) {
+      try {
+        await api.delete(`/alunocursos/${id}`);
+        setCursos((prev) => prev.filter((curso) => curso.id !== id));
+      } catch (error) {
+        console.error('Error removing enrollment:', error);
+        alert('Error removing enrollment.');
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div style={{ padding: "2rem", textAlign: "center", color: "#555" }}>
@@ -52,15 +64,17 @@ export default function CursosPage() {
     );
   }
 
-  if (cursos.length === 0) {
-    return (
-      <div style={{ padding: "2rem", textAlign: "center", color: "#555" }}>
-        <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "1rem" }}>My Courses</h1>
-        <p>You are not enrolled in any course yet.</p>
+  return (
+    <div style={{ padding: "2rem" }}>
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "1rem", color: "#222" }}>
+        My Courses
+      </h1>
+
+      {/* link para cursos disponíveis sempre visível */}
+      <div style={{ marginBottom: "1rem" }}>
         <Link href="/cursos/disponiveis">
           <button
             style={{
-              marginTop: "1rem",
               padding: "0.5rem 1rem",
               backgroundColor: "#007bff",
               color: "#fff",
@@ -73,69 +87,82 @@ export default function CursosPage() {
           </button>
         </Link>
       </div>
-    );
-  }
 
-  return (
-    <div style={{ padding: "2rem" }}>
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "1rem", color: "#222" }}>
-        My Courses
-      </h1>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-        gap: "1rem"
-      }}>
-        {cursos.map((matricula) => (
-          <div
-            key={matricula.id}
-            style={{
-              backgroundColor: "#fff",
-              border: "1px solid #ddd",
-              borderRadius: "8px",
-              padding: "1rem",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-              transition: "box-shadow 0.3s",
-            }}
-            onMouseEnter={e => (e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.15)")}
-            onMouseLeave={e => (e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)")}
-          >
-            <h2 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "0.5rem" }}>
-              {matricula.curso_nome}
-            </h2>
-            <p style={{ color: "#666", marginBottom: "0.5rem" }}>
-              {matricula.curso_descricao}
-            </p>
-            <p style={{ fontSize: "14px", marginBottom: "0.25rem" }}>
-              Progress: {matricula.percentual_concluido}%
-            </p>
-            <p style={{ fontSize: "14px", marginBottom: "0.25rem" }}>
-              Course Status: {matricula.status_curso}
-            </p>
-            <p style={{ fontSize: "14px", marginBottom: "0.25rem" }}>
-              Payment Status: {matricula.status_pagamento}
-            </p>
-            <p style={{ fontSize: "14px", marginBottom: "0.5rem" }}>
-              XP: {matricula.xp_ganho} earned / {matricula.xp_disponivel} available
-            </p>
-
-            <button
-              onClick={() => router.push(`/execucao-curso/${matricula.id}`)}
+      {cursos.length === 0 ? (
+        <div style={{ textAlign: "center", color: "#555" }}>
+          <p>You are not enrolled in any course yet.</p>
+        </div>
+      ) : (
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: "1rem"
+        }}>
+          {cursos.map((matricula) => (
+            <div
+              key={matricula.id}
               style={{
-                marginTop: "0.5rem",
-                padding: "0.5rem 1rem",
-                backgroundColor: "#007bff",
-                color: "#fff",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer"
+                backgroundColor: "#fff",
+                border: "1px solid #ddd",
+                borderRadius: "8px",
+                padding: "1rem",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                transition: "box-shadow 0.3s",
               }}
+              onMouseEnter={e => (e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.15)")}
+              onMouseLeave={e => (e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)")}
             >
-              Access Course
-            </button>
-          </div>
-        ))}
-      </div>
+              <h2 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "0.5rem" }}>
+                {matricula.curso_nome}
+              </h2>
+              <p style={{ color: "#666", marginBottom: "0.5rem" }}>
+                {matricula.curso_descricao}
+              </p>
+              <p style={{ fontSize: "14px", marginBottom: "0.25rem" }}>
+                Progress: {matricula.percentual_concluido}%
+              </p>
+              <p style={{ fontSize: "14px", marginBottom: "0.25rem" }}>
+                Course Status: {matricula.status_curso}
+              </p>
+              <p style={{ fontSize: "14px", marginBottom: "0.25rem" }}>
+                Payment Status: {matricula.status_pagamento}
+              </p>
+              <p style={{ fontSize: "14px", marginBottom: "0.5rem" }}>
+                XP: {matricula.xp_ganho} earned / {matricula.xp_disponivel} available
+              </p>
+
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <button
+                  onClick={() => router.push(`/execucao-curso/${matricula.id}`)}
+                  style={{
+                    padding: "0.5rem 1rem",
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer"
+                  }}
+                >
+                  Access
+                </button>
+                <button
+                  onClick={() => handleRemove(matricula.id)}
+                  style={{
+                    padding: "0.5rem 1rem",
+                    backgroundColor: "#dc2626",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer"
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
