@@ -179,15 +179,17 @@ export default function CourseExecutionPage() {
             )}
             {selectedItem.tipo_item_modulo === 'contract_validation' && (
               <>
+                <p><strong>Validator Address:</strong> {selectedItem.validator_endereco}</p>
+                <p><strong>Validator Network:</strong> {selectedItem.validator_rede}</p>
                 <p><strong>Contract Validation Status:</strong> {selectedItem.status_validacao_contrato}</p>
                 {abiLoading && <p>Loading ABI...</p>}
                 {abiError && <p style={{ color: "red" }}>{abiError}</p>}
 
                 {abi && (
                   <Validate
-                    contractAddress={selectedItem.validator_endereco}
+                    contractAddress={selectedItem.endereco_contrato_validar}
                     abi={abi}
-                    validatorAddress={selectedItem.endereco_contrato_validar}
+                    validatorAddress={selectedItem.validator_endereco}
                     onSuccess={() => goToNext()}
                   />
                 )}

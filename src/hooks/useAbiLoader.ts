@@ -13,16 +13,25 @@ export function useAbiLoader(address: string, network: Network): UseAbiLoaderRes
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  console.log("DEBUG useAbiLoader - dentro da funcao!!");
+
   useEffect(() => {
+    console.log("DEBUG useAbiLoader - address:", address);
+    console.log("DEBUG useAbiLoader - network:", network);
+
     if (!address || !network) return;
 
     const fetchAbi = async () => {
       try {
+
+        console.log("DEBUG useAbiLoader - fetching ABI from explorer...");
+
         setLoading(true);
         setError(null);
 
-        let url = '';
+        console.log("DEBUG useAbiLoader.fetchAbi() - network:", network);
 
+        let url = '';
         if (network === 'sepolia') {
           const apiKey = process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY;
           url = `https://api-sepolia.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${apiKey}`;
@@ -30,6 +39,8 @@ export function useAbiLoader(address: string, network: Network): UseAbiLoaderRes
           const apiKey = process.env.NEXT_PUBLIC_SNOWTRACE_API_KEY;
           url = `https://api.snowtrace.io/api?module=contract&action=getabi&address=${address}&apikey=${apiKey}`;
         }
+
+        console.log("DEBUG useAbiLoader.fetchAbi() - url:", url);
 
         const res = await fetch(url);
         const data: { status: string; result: string } = await res.json();
