@@ -151,6 +151,14 @@ export default function CourseExecutionPage() {
             {selectedItem.tipo_item_modulo === 'video' && (
               <>
                 <p><strong>Video Link:</strong> {selectedItem.video_url}</p>
+                <div style={{ marginBottom: "1rem" }}>
+                  <iframe
+                    src={selectedItem.video_url}
+                    style={{ width: "100%", height: "360px", border: "1px solid #ddd", borderRadius: "4px" }}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
                 {selectedItem.status !== 'completed' && (
                   <button
                     onClick={completeLesson}
@@ -169,7 +177,6 @@ export default function CourseExecutionPage() {
                 )}
               </>
             )}
-
             {selectedItem.tipo_item_modulo === 'contract_validation' && (
               <>
                 <p><strong>Contract Validation Status:</strong> {selectedItem.status_validacao_contrato}</p>
